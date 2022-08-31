@@ -1,3 +1,6 @@
+args: {
+
+}
 containers: {
     "kinesis-ingest" : {
         build: {
