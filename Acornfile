@@ -1,0 +1,7 @@
+containers: {
+    "kinesis-ingest" : {
+        build: {
+            context: "."
+        }
+    }
+}
