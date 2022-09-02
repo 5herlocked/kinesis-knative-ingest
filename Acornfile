@@ -1,10 +1,17 @@
 args: {
-
+    dataStream: ""
+    region: "us-east-1"
+    kSink: ""
 }
 containers: {
     "kinesis-ingest" : {
         build: {
             context: "."
+        },
+        env: {
+            "DATA_STREAM": args.dataStream
+            "REGION": args.region
+            "K_SINK": args.kSink
         }
     }
 }
