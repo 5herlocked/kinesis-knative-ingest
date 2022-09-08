@@ -108,18 +108,12 @@ if __name__ == '__main__':
 
     # TODO: Move python arguments from CLI to the docker env, 
     # leveraging compose/something similar in Acorn
-    # argument_parser = argparse.ArgumentParser()
     
     import os
     
     data_stream = os.environ['DATA_STREAM']
-    region = os.environ['REGION']
+    region = os.environ['AWS_DEFAULT_REGION']
     sink_url = os.environ['K_SINK']
-
-    # argument_parser.add_argument('--data_stream', help='Kinesis Data Stream name')
-    # argument_parser.add_argument('--region', help='Define the region of the AWS session', default='us-east-1')
-    
-    # args = argument_parser.parse_args()
     
     running = True
 
@@ -127,8 +121,6 @@ if __name__ == '__main__':
 
     signal.signal(signal.SIGTERM, interrupt_handler)
     signal.signal(signal.SIGINT, interrupt_handler)
-    
-    # data_stream = args.data_stream
     
     consume_kinesis_shards(data_stream)
     
