@@ -105,9 +105,6 @@ def consume_kinesis_shards(data_stream):
 
 if __name__ == '__main__':
     import argparse
-
-    # TODO: Move python arguments from CLI to the docker env, 
-    # leveraging compose/something similar in Acorn
     
     import os
     
