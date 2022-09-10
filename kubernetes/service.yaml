@@ -7,10 +7,12 @@ spec:
     spec: 
       containers:
         - image: 771830474512.dkr.ecr.us-east-1.amazonaws.com/kinesis-knative-ingest:latest
-        name: kinesis-knative-eventer
+          name: kinesis-knative-eventer
           env:
-            - name: DATA_STREAM
+          - name: DATA_STREAM
             # TODO: Inject the correct value here on deployment
-              value: ""
+            # Ideally this would be mutli-tenent aware with each user/account
+            # having their OWN stream OR the data stream having user aware things
+            value: "test-data-stream"
           command: ["python3"]
           args: ["/app/ingest.py"]
