@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata: 
+  name: kinesis-knative-eventer
+spec:
+  template:
+    spec: 
+      containers:
+        - image: 771830474512.dkr.ecr.us-east-1.amazonaws.com/kinesis-knative-ingest:latest
+        name: kinesis-knative-eventer
+          env:
+            - name: DATA_STREAM
+            # TODO: Inject the correct value here on deployment
+              value: ""
+          command: ["python3"]
+          args: ["/app/ingest.py"]
