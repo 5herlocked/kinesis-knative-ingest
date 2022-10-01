@@ -28,7 +28,8 @@ def fetch_and_censor(shard, pipe):
     except Exception as e:
         print("Exception while getting shard iterator: ", e)
         return
-    
+
+    # TODO: Watch for ratelimits from kinesis data streams
     while iterator is not None:
         try:
             records = kinesis_data.get_records(
@@ -46,7 +47,7 @@ def fetch_and_censor(shard, pipe):
     pass
 
 
-def consume_kinesis_shards(data_stream):
+def consume_kinesis_shards(local_data_stream):
     global running, sink_url
     
     session = boto3.Session(region_name='us-east-1')
@@ -60,11 +61,11 @@ def consume_kinesis_shards(data_stream):
     
     kinesis_data = session.client('kinesis')
     shards = kinesis_data.list_shards(
-        StreamName=data_stream
+        StreamName=local_data_stream
     )["Shards"]
     
     ctx = {
-        "data_stream": data_stream,
+        "data_stream": local_data_stream,
     }
     
     attributes = {
@@ -104,8 +105,6 @@ def consume_kinesis_shards(data_stream):
 
 
 if __name__ == '__main__':
-    import argparse
-    
     import os
     
     data_stream = os.environ['DATA_STREAM']
