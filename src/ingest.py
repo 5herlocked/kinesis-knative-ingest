@@ -29,7 +29,7 @@ def fetch_and_censor(shard, pipe):
         print("Exception while getting shard iterator: ", e)
         return
 
-    # TODO: Watch for ratelimits from kinesis data streams
+    failed_iter_duration = 0
     while iterator is not None:
         try:
             records = kinesis_data.get_records(
@@ -42,8 +42,14 @@ def fetch_and_censor(shard, pipe):
                 if len(payload["FaceSearchResponse"]) == 0:
                     continue
                 pipe.put(payload)
+            
+            # implemented exponential backoff
+            failed_iter_duration = 0
         except Exception as e:
+            failed_iter_duration += 1
             print("Exception getting records: ", e)
+
+        time.sleep(1 * failed_iter_duration)
     pass
 
 
@@ -80,6 +86,7 @@ def consume_kinesis_shards(local_data_stream):
         
         results[shard["ShardId"]] = pool.apply_async(fetch_and_censor, args=(shard, q))
         
+    # don't do anything till we actually have something in the queeu
     while q.empty():
         # prevent spinlock
         time.sleep(0.5)
